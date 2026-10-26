@@ -12,18 +12,18 @@ Currently, the Panama City lab's metadata is stored in a local-first database th
 
 This repository implements an intermediate **ETL and Mapping Pipeline**. The workflow is as follows:
 
-1. **Extraction**: Raw data is pulled from the database using SQL queries into baseline CSV files (`events.csv`, `platforms.csv`, `sensors.csv`, `variables.csv`).
+1. **Extraction**: Raw data is pulled from the primary database using SQL queries into baseline CSV files (`events.csv`, `platforms.csv`, `sensors.csv`, `variables.csv`).
 2. **Crosswalk Mapping**: Database values are mapped to global standards using static CSV crosswalk files. This includes:
    - Translating integer IDs to UUIDv4s.
-   - Mapping localized platform names to ICES or IMO registries.
-   - Mapping sensor names to GCMD keywords.
-   - Translating human-readable variables and units to CF Standard Names and UDUNITS.
-   - Resolving unstructured dataset payloads to their respective legacy event IDs.
+   - Mapping localized platform names to global registries such as [ICES Ship Codes](https://vocab.ices.dk/?ref=315) or [IMO Numbers (GISIS)](https://gisis.imo.org/Public/).
+   - Mapping sensor names to [GCMD Instrument Keywords](https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/instruments).
+   - Translating human-readable variables and units to [CF Standard Names](https://cfconventions.org/Data/cf-standard-names/current/build/cf-standard-name-table.html) and [UDUNITS-2](https://docs.unidata.ucar.edu/udunits/current/udunits2.html).
+   - Resolving unstructured dataset payloads to their respective source event IDs.
 3. **Transformation**: Scripts apply these mappings to the raw extracts to produce the final, compliant CSVs ready for XML generation.
 
 ## Repository Contents
 
-*   **`sql/`**: Contains the raw SQL queries used to extract the initial `events.csv`, `platforms.csv`, `sensors.csv`, and `variables.csv` from the legacy database.
+*   **`sql/`**: Contains the raw SQL queries used to extract the initial `events.csv`, `platforms.csv`, `sensors.csv`, and `variables.csv` from the primary database.
 *   **`raw_extracts/`**: Contains samples or the `head` of the extracted CSVs to document the database data state.
 *   **`mappings/`**: The definitive CSV crosswalk files maintained by domain experts (e.g., UUID maps, platform registry crosswalks, unstructured data join maps).
 *   **`scripts/`**: Helper Python/Bash scripts used to generate UUIDs, clean timestamps, build crosswalk templates, or apply the mappings to the raw SQL extracts.
